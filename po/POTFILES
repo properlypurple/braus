@@ -1,0 +1,6 @@
+data/com.properlypurple.braus.desktop.in
+data/com.properlypurple.braus.appdata.xml.in
+data/com.properlypurple.braus.gschema.xml
+src/main.py
+src/window.py
+
