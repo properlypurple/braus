@@ -53,7 +53,7 @@ class BrausWindow(Gtk.ApplicationWindow):
             box-shadow: none;
             border: none;
             padding: 5px 10px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.95);
+            border-bottom: 1px solid rgba(0,0,0,0.5);
         }
         #headerbar entry {
             background: rgba(0,0,0,0.4);
@@ -180,10 +180,12 @@ class BrausWindow(Gtk.ApplicationWindow):
         
         infobar.add_action_widget(infobuttonnever, Gtk.ResponseType.REJECT)
         infobar.add_button (_("Set as Default"), Gtk.ResponseType.ACCEPT)
+        
+        
 
-        if app.settings.get_boolean("ask-default") == True or Gio.AppInfo.get_default_for_type(app.content_types[1], True).get_id() != Gio.Application.get_application_id(app) + '.desktop' :
+        if app.settings.get_boolean("ask-default") == True or (Gio.AppInfo.get_default_for_type(app.content_types[1], True).get_id() != Gio.Application.get_application_id(app) + '.desktop') :
             outerbox.add(infobar)
-        #print(app.settings.get_boolean("ask-default"))
+        
 
         # Get all apps which are registered as browsers
         browsers = Gio.AppInfo.get_all_for_type(app.content_types[1])
@@ -261,18 +263,13 @@ class BrausWindow(Gtk.ApplicationWindow):
 
     def on_infobar_response(self, infobar, response_id, app):
         infobar.hide()
-        #print(Gio.Application.get_application_id(app))
         appinfo = Gio.DesktopAppInfo.new(Gio.Application.get_application_id(app) + '.desktop')
-        #print(response_id)
-        #print(Gio.Application.get_application_id(app))
-        print(Gio.Application.get_application_id(app))
 
         if response_id == Gtk.ResponseType.ACCEPT:
             #set as default
-            #print("yes")
             try:
+                #loop through content types, and set Braus as default for those
                 for content_type in app.content_types:
-                    print(content_type + " : " + Gio.AppInfo.get_default_for_type(content_type, True).get_id())
                     appinfo.set_as_default_for_type(content_type)
 
             except GLib.Error:
@@ -280,6 +277,5 @@ class BrausWindow(Gtk.ApplicationWindow):
         
         elif response_id == Gtk.ResponseType.REJECT:
             #don't ask again
-            print("rejected")
             app.settings.set_boolean("ask-default", False)
     
