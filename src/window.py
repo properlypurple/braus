@@ -118,7 +118,7 @@ class BrausWindow(Gtk.ApplicationWindow):
         entry = Gtk.Entry()
         entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, "system-search-symbolic")
         try:
-            entry.set_text(sys.argv[2])
+            entry.set_text(sys.argv[1])
         except IndexError:
             print("No url provided")
 
@@ -181,10 +181,12 @@ class BrausWindow(Gtk.ApplicationWindow):
         infobar.add_action_widget(infobuttonnever, Gtk.ResponseType.REJECT)
         infobar.add_button (_("Set as Default"), Gtk.ResponseType.ACCEPT)
 
-        outerbox.add(infobar)
+        if app.settings.get_boolean("ask-default") == True or Gio.AppInfo.get_default_for_type(app.content_types[1], True).get_id() != Gio.Application.get_application_id(app) + '.desktop' :
+            outerbox.add(infobar)
+        #print(app.settings.get_boolean("ask-default"))
 
         # Get all apps which are registered as browsers
-        browsers = Gio.AppInfo.get_all_for_type("x-scheme-handler/http")
+        browsers = Gio.AppInfo.get_all_for_type(app.content_types[1])
 
         # The Gio.AppInfo.launch_uris method takes a list object, so let's make a list and put our url in there
         uris = []
@@ -258,6 +260,26 @@ class BrausWindow(Gtk.ApplicationWindow):
         about_dialog.present()
 
     def on_infobar_response(self, infobar, response_id, app):
+        infobar.hide()
+        #print(Gio.Application.get_application_id(app))
         appinfo = Gio.DesktopAppInfo.new(Gio.Application.get_application_id(app) + '.desktop')
-        print(response_id)
+        #print(response_id)
+        #print(Gio.Application.get_application_id(app))
+        print(Gio.Application.get_application_id(app))
+
+        if response_id == Gtk.ResponseType.ACCEPT:
+            #set as default
+            #print("yes")
+            try:
+                for content_type in app.content_types:
+                    print(content_type + " : " + Gio.AppInfo.get_default_for_type(content_type, True).get_id())
+                    appinfo.set_as_default_for_type(content_type)
+
+            except GLib.Error:
+                print("error")
+        
+        elif response_id == Gtk.ResponseType.REJECT:
+            #don't ask again
+            print("rejected")
+            app.settings.set_boolean("ask-default", False)
     

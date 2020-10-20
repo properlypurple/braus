@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=braus
-Exec=braus
+Exec=braus %U
 Terminal=false
 Type=Application
 Categories=GTK;Network;

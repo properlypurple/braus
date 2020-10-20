@@ -26,6 +26,17 @@ from .window import BrausWindow
 
 
 class Application(Gtk.Application):
+
+    content_types = ["x-scheme-handler/http",
+        "x-scheme-handler/https",
+        "text/html",
+        "application/x-extension-htm",
+        "application/x-extension-html",
+        "application/x-extension-shtml",
+        "application/xhtml+xml",
+        "application/x-extension-xht"
+        ]
+
     def __init__(self, *args, **kwargs):
         super().__init__(
             *args,
@@ -34,14 +45,16 @@ class Application(Gtk.Application):
             **kwargs
         )
 
-        self.add_main_option(
-            "url",
-            ord("u"),
-            GLib.OptionFlags.NONE,
-            GLib.OptionArg.NONE,
-            "URL to open",
-            None,
-        )
+        self.settings = Gio.Settings.new("com.properlypurple.braus")
+
+        # self.add_main_option(
+        #     "",
+        #     ord("u"),
+        #     GLib.OptionFlags.NONE,
+        #     GLib.OptionArg.NONE,
+        #     "URL to open",
+        #     None,
+        # )
 
     def do_activate(self):
         self.win = BrausWindow(self)

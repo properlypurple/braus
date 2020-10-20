@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="braus">
 	<schema id="com.properlypurple.braus" path="/com/properlypurple/braus/">
+		<key name="ask-default" type="b">
+			<default>true</default>
+			<summary>Ask to be default</summary>
+			<description>Whether or not Braus should ask to be the default web browser</description>
+		</key>
 	</schema>
 </schemalist>
