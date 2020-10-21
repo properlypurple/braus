@@ -67,6 +67,18 @@ class Application(Gtk.Application):
     def do_startup(self):
         Gtk.Application.do_startup(self)
 
+    def on_about(self, action):
+        about_dialog = Gtk.AboutDialog(transient_for=self.win, modal=True)
+
+        about_dialog.set_title(_("About"))
+        about_dialog.set_program_name(_("Braus"))
+        about_dialog.set_comments("A small app to choose a browser to open your links")
+        about_dialog.set_website("https://braus.properlypurple.com")
+        about_dialog.set_website_label("Braus website")
+        about_dialog.set_authors(["Kavya Gokul"])
+        about_dialog.connect('response', lambda dialog, data: dialog.destroy())
+        about_dialog.set_logo_icon_name('applications-internet')
+        about_dialog.present()
 
 def main(version):
     app = Application()

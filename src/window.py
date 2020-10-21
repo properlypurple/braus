@@ -139,7 +139,7 @@ class BrausWindow(Gtk.ApplicationWindow):
 
         aboutmenuitem = Gtk.MenuItem.new()
         aboutmenuitem.set_label("About")
-        aboutmenuitem.connect("activate", self.on_about, app)
+        aboutmenuitem.connect("activate", app.on_about)
         optionsmenu.append(aboutmenuitem)
 
         quitmenuitem = Gtk.MenuItem.new()
