@@ -1,20 +1,38 @@
-## Braus
+# Braus
 A small application to select a browser every time you click a link anywhere. This is especially useful if you have multiple browsers or profiles, and you want to be able to open certain links in certain browsers. Very useful for web developers, but also for a lot of other people.
 
-GNU/Linux alternative to apps such as Choosy/Browserchooser
-
-A package is available for Archlinux [in the AUR](https://aur.archlinux.org/packages/braus-git/)
+GNU/Linux alternative to apps such as Choosy/Browserchooser/Browserosaurus.
 
 If you wish to package the app for your distro, please open an issue and we'll work on it together.
 
-#### Build instructions
-````
-meson build --prefix=/usr
-cd build
-ninja
-ninja install
+## Build
+```
+$ git clone <repo>
+$ cd braus
+$ meson build --prefix=$(pwd)/build
+$ ninja -C build install
+```
 
-````
+### Local launch
+```
+$ GSETTINGS_SCHEMA_DIR=build/share/glib-2.0/schemas ./build/bin/braus 
+```
+
+## Install
+
+### AUR
+* `yay` used as example. You can install as standard [AUR](https://wiki.archlinux.org/index.php/Arch_User_Repository) package.
+```
+$ yay -S braus
+```
+
+### From sources
+```
+$ git clone <repo>
+$ cd braus
+$ meson build --prefix=/usr
+$ ninja -C build install
+```
 
 When you run braus for the first time, it will ask you whether you want to set it as your default browser. Ideally you should make it default to actually get the benefit of an app like this.
 
@@ -46,3 +64,4 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
