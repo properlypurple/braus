@@ -216,7 +216,6 @@ class BrausWindow(Gtk.ApplicationWindow):
         # Remove Braus from the list of browsers
         self.browsers = list(filter(lambda b: Gio.Application.get_application_id(app) not in b.get_id(), browsers))
         
-
         # Loop over the apps in the list of browsers
         for index, browser in enumerate(self.browsers):
             #Get the icon and label, and put them in a button
