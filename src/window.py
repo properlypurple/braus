@@ -20,6 +20,8 @@ import sys
 
 class BrausWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'BrausWindow'
+    browsers = []
+    entry = Gtk.Entry()
 
     def __init__(self, app):
         super().__init__(title="Braus", application=app)
@@ -29,6 +31,8 @@ class BrausWindow(Gtk.ApplicationWindow):
 
         # Set to not be resizable
         self.set_resizable(False)
+
+        self.connect('key-release-event', self.keyboard_handle, app)
 
         settings = Gtk.Settings.get_default()
         settings.set_property('gtk-application-prefer-dark-theme', True)
@@ -83,11 +87,20 @@ class BrausWindow(Gtk.ApplicationWindow):
         #mainbox button {
             background: none;
             border: 1px solid rgba(255,255,255, 0.4);
-            padding: 18px 12px;
-            font-size: 0.6rem;
         }
+
         #mainbox button:hover {
             background-color: rgba(255,255,255,0.1);
+        }
+
+        #browser-btn {
+            padding: 18px 12px;
+            font-size: 0.8rem;
+        }
+
+        #hotkey-btn {
+            margin-top: 10px;
+            font-size: 0.8rem;
         }
 
         #browsericon {
@@ -115,15 +128,14 @@ class BrausWindow(Gtk.ApplicationWindow):
         Gtk.StyleContext.add_class(hb.get_style_context(), Gtk.STYLE_CLASS_FLAT)
 
         # Create a entry, put the url argument in the entry, and add to headerbar
-        entry = Gtk.Entry()
-        entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, "system-search-symbolic")
+        self.entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, "system-search-symbolic")
         try:
-            entry.set_text(sys.argv[1])
+            self.entry.set_text(sys.argv[1])
         except IndexError:
             print("No url provided")
 
-        entry.set_width_chars(35)
-        hb.add(entry)
+        self.entry.set_width_chars(35)
+        hb.add(self.entry)
 
         # Create an options button
         optionsbutton = Gtk.MenuButton.new()
@@ -189,28 +201,11 @@ class BrausWindow(Gtk.ApplicationWindow):
 
         # Get all apps which are registered as browsers
         browsers = Gio.AppInfo.get_all_for_type(app.content_types[1])
-
-        # The Gio.AppInfo.launch_uris method takes a list object, so let's make a list and put our url in there
-        uris = []
-        uris.append(entry.get_text())
-
-        #create an empty dict to use later
-        appslist = {}
-
+        # Remove Braus from the list of browsers
+        self.browsers = list(filter(lambda b: Gio.Application.get_application_id(app) not in b.get_id(), browsers))
+        
         # Loop over the apps in the list of browsers
-        for browser in browsers:
-
-            #print(Gio.Application.get_application_id(app))
-            #print(browser.get_id())
-
-            # Remove Braus from the list of browsers
-            if Gio.Application.get_application_id(app) + '.desktop' == browser.get_id() :
-                continue
-            
-
-            #put the current one in the loop, in a dict
-            appslist.update({browser.get_id() : browser})
-
+        for index, browser in enumerate(self.browsers):
             #Get the icon and label, and put them in a button
             try:
                 icon = Gtk.Image.new_from_gicon(browser.get_icon(), Gtk.IconSize.DIALOG)
@@ -225,31 +220,49 @@ class BrausWindow(Gtk.ApplicationWindow):
             label.set_ellipsize(Pango.EllipsizeMode.END)
             label.set_justify(Gtk.Justification.LEFT)
 
-            #Every button has a vertical Gtk.Box inside
-            vbox = Gtk.Box()
-            vbox.set_orientation(Gtk.Orientation.VERTICAL)
-            vbox.set_spacing(0)
+            # Every button has a vertical Gtk.Box inside
+            browserBtn = Gtk.Button()
+            browserBtnBox = Gtk.Box()
+            browserBtnBox.set_name('browser-btn')
+            browserBtnBox.set_orientation(Gtk.Orientation.VERTICAL)
+            browserBtnBox.set_spacing(0)
+            browserBtnBox.pack_start(icon,True, True, 0)
+            browserBtnBox.pack_start(label,True, True, 0)
 
-            vbox.pack_start(icon,True, True, 0)
-            vbox.pack_start(label,True, True, 0)
+            browserBtn.add(browserBtnBox)
+            #Connect the click signal, passing on all relevant data(browser and url)
+            browserBtn.connect("clicked", self.browser_click_handle, index, app)
 
-            button = Gtk.Button()
+            # Browser entry box
+            browserEntryBox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            browserEntryBox.pack_start(browserBtn, True, True, 0)
 
-            button.add(vbox)
+            # Hotkey recorder/indicator
+            if index < 10:
+                hotkeyBtn = Gtk.Label(label=str(index + 1))
+                hotkeyBtn.set_name('hotkey-btn')
+                hotkeyBtn.set_hexpand(False)
+                hotkeyBtn.set_halign(Gtk.Align.CENTER)
+                browserEntryBox.pack_end(hotkeyBtn, True, True, 0)
 
             # Add our button to the horizontal box we made earlier
-            hbox.pack_end(button, True, True, 0)
+            hbox.pack_start(browserEntryBox, True, True, 0)
 
-            #Connect the click signal, passing on all relevant data(browser and url)
-            button.connect("clicked", self.launch_browser, appslist.get(browser.get_id()), uris, app)
-
-
+    def keyboard_handle(self, widget, event, app):
+        index = int(Gdk.keyval_name(event.keyval)) - 1
+        self.launch_browser(index, app)
 
     # Function to actually launch the browser
-    def launch_browser(self, button, browser, uris, app):
+    def browser_click_handle(self, target, index, app):
+        self.launch_browser(index, app)
+
+    def launch_browser(self, index, app):
+        # The Gio.AppInfo.launch_uris method takes a list object, so let's make a list and put our url in there
+        uris = [self.entry.get_text()]
+        browser = self.browsers[index]
         browser.launch_uris(uris)
         print("Opening " + browser.get_display_name())
-        self.quitApp(self,app)
+        self.quitApp(self, app)
 
     # Quit app action
     def quitApp(self, *args):
