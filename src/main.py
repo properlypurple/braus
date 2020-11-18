@@ -17,6 +17,7 @@
 
 import sys
 import gi
+import os
 
 gi.require_version('Gtk', '3.0')
 
@@ -24,9 +25,7 @@ from gi.repository import Gtk, Gio, GLib, Pango, Gdk
 
 from .window import BrausWindow
 
-
-class Application(Gtk.Application):
-
+class Braus(Gtk.Application):
     content_types = ["x-scheme-handler/http",
         "x-scheme-handler/https",
         "text/html",
@@ -34,27 +33,18 @@ class Application(Gtk.Application):
         "application/x-extension-html",
         "application/x-extension-shtml",
         "application/xhtml+xml",
-        "application/x-extension-xht"
-        ]
+        "application/x-extension-xht",
+    ]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, version, resdir):
         super().__init__(
-            *args,
             application_id='com.properlypurple.braus',
-            flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
-            **kwargs
+            flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE
         )
-
+        self.resources = Gio.Resource.load('{}/braus.gresource'.format(resdir))
         self.settings = Gio.Settings.new("com.properlypurple.braus")
 
-        # self.add_main_option(
-        #     "",
-        #     ord("u"),
-        #     GLib.OptionFlags.NONE,
-        #     GLib.OptionArg.NONE,
-        #     "URL to open",
-        #     None,
-        # )
+        self.version = version
 
     def do_activate(self):
         self.win = BrausWindow(self)
@@ -79,7 +69,3 @@ class Application(Gtk.Application):
         about_dialog.connect('response', lambda dialog, data: dialog.destroy())
         about_dialog.set_logo_icon_name('applications-internet')
         about_dialog.present()
-
-def main(version):
-    app = Application()
-    return app.run(sys.argv)
