@@ -31,9 +31,6 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 gettext.install('braus', localedir)
 
 if __name__ == '__main__':
-    import gi
-
-
-
-    from braus import main
-    sys.exit(main.main(VERSION))
+    from braus.main import Braus
+    app = Braus(version=VERSION, resdir=pkgdatadir)
+    sys.exit(app.run(sys.argv))
