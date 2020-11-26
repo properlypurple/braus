@@ -42,7 +42,7 @@ class Application(Gtk.Application):
         super().__init__(
             *args,
             application_id='com.properlypurple.braus',
-            flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
+            flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE | Gio.ApplicationFlags.NON_UNIQUE,
             **kwargs
         )
 
