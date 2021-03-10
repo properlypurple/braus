@@ -64,15 +64,19 @@ class Application(Gtk.Application):
 
     def do_command_line(self, command_line):
         args = command_line.get_arguments()
-        if(args[1] =='--set'):
-            url = args[2]
-            browser = args[3]
-            self.browser_mappings.do_setbrowser(url, browser)
-            return 0
+        try:
+            if(len(args)> 0):
+                if(args[1] =='--set'):
+                    url = args[2]
+                    browser = args[3]
+                    self.browser_mappings.do_setbrowser(url, browser)
+                    return 0
 
-        if(args[1] =='--clear'):
-            self.browser_mappings.do_clearbrowsermappings()
-            return 0
+                if(args[1] =='--clear'):
+                    self.browser_mappings.do_clearbrowsermappings()
+                    return 0
+        except IndexError:
+            print("No arguments provided")
 
         self.activate()
         return 0
