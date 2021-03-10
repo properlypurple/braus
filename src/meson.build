@@ -23,6 +23,7 @@ braus_sources = [
   '__init__.py',
   'main.py',
   'window.py',
+  'browser_mappings.py',
 ]
 
 install_data(braus_sources, install_dir: moduledir)
