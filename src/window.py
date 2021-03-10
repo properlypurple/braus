@@ -273,6 +273,14 @@ class BrausWindow(Gtk.ApplicationWindow):
         index = int(Gdk.keyval_name(event.keyval)) - 1
         self.launch_browser(index, app)
 
+    def do_checkUrlMappings(self, app, url, browsers):
+        browser = app.browser_mappings.do_determinebrowser(app, url, browsers)
+        if(browser):
+            uris = []
+            uris.append(url)
+            browser.launch_uris(uris)
+            self.quitApp(self,app)
+                        
     # Function to actually launch the browser
     def browser_click_handle(self, target, index, app):
         self.launch_browser(index, app)
