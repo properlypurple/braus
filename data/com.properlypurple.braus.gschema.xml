@@ -6,5 +6,10 @@
 			<summary>Ask to be default</summary>
 			<description>Whether or not Braus should ask to be the default web browser</description>
 		</key>
+		<key name="url-mapping" type="aas">
+			<default>[]</default>
+			<summary>UrlMappings</summary>
+			<description>URLs that are automatically opend in a default browser</description>
+		</key>
 	</schema>
 </schemalist>

@@ -23,6 +23,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, GLib, Pango, Gdk
 
 from .window import BrausWindow
+from .browser_mappings import BrowserMappings
 
 
 class Application(Gtk.Application):
@@ -46,6 +47,7 @@ class Application(Gtk.Application):
         )
 
         self.settings = Gio.Settings.new("com.properlypurple.braus")
+        self.browser_mappings = BrowserMappings(self.settings)
 
         # self.add_main_option(
         #     "",
@@ -61,6 +63,17 @@ class Application(Gtk.Application):
         self.win.show_all()
 
     def do_command_line(self, command_line):
+        args = command_line.get_arguments()
+        if(args[1] =='--set'):
+            url = args[2]
+            browser = args[3]
+            self.browser_mappings.do_setbrowser(url, browser)
+            return 0
+
+        if(args[1] =='--clear'):
+            self.browser_mappings.do_clearbrowsermappings()
+            return 0
+
         self.activate()
         return 0
 

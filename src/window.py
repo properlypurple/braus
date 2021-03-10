@@ -197,6 +197,8 @@ class BrausWindow(Gtk.ApplicationWindow):
         #create an empty dict to use later
         appslist = {}
 
+        self.do_checkUrlMappings(app, entry.get_text(), browsers)
+
         # Loop over the apps in the list of browsers
         for browser in browsers:
 
@@ -244,7 +246,14 @@ class BrausWindow(Gtk.ApplicationWindow):
             button.connect("clicked", self.launch_browser, appslist.get(browser.get_id()), uris, app)
 
 
-
+    def do_checkUrlMappings(self, app, url, browsers):
+        browser = app.browser_mappings.do_determinebrowser(app, url, browsers)
+        if(browser):
+            uris = []
+            uris.append(url)
+            browser.launch_uris(uris)
+            self.quitApp(self,app)
+                        
     # Function to actually launch the browser
     def launch_browser(self, button, browser, uris, app):
         browser.launch_uris(uris)
