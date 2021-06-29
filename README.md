@@ -1,3 +1,5 @@
+[![braus](https://snapcraft.io/braus/badge.svg)](https://snapcraft.io/braus)
+
 # Braus
 A small application to select a browser every time you click a link anywhere. This is especially useful if you have multiple browsers or profiles, and you want to be able to open certain links in certain browsers. Very useful for web developers, but also for a lot of other people.
 
