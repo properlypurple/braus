@@ -206,12 +206,12 @@ class BrausWindow(Gtk.ApplicationWindow):
 
         # The Gio.AppInfo.launch_uris method takes a list object, so let's make a list and put our url in there
         uris = []
-        uris.append(entry.get_text())
+        uris.append(self.entry.get_text())
 
         #create an empty dict to use later
         appslist = {}
 
-        self.do_checkUrlMappings(app, entry.get_text(), browsers)
+        self.do_checkUrlMappings(app, self.entry.get_text(), browsers)
 
         # Remove Braus from the list of browsers
         self.browsers = list(filter(lambda b: Gio.Application.get_application_id(app) not in b.get_id(), browsers))
