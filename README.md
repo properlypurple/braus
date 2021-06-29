@@ -1,9 +1,11 @@
+[![braus](https://snapcraft.io/braus/badge.svg)](https://snapcraft.io/braus)
+
 # Braus
 A small application to select a browser every time you click a link anywhere. This is especially useful if you have multiple browsers or profiles, and you want to be able to open certain links in certain browsers. Very useful for web developers, but also for a lot of other people.
 
 GNU/Linux alternative to apps such as Choosy/Browserchooser/Browserosaurus.
 
-If you wish to package the app for your distro, please open an issue and we'll work on it together.
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/braus)
 
 ## Build
 ```
