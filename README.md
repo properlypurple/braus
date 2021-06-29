@@ -36,6 +36,19 @@ $ ninja -C build install
 
 When you run braus for the first time, it will ask you whether you want to set it as your default browser. Ideally you should make it default to actually get the benefit of an app like this.
 
+#### Setting default browsers for URLs
+If you want Braus to open URLs in a specific browser, without selecting it every time use the following syntax:
+````
+braus --set http://my-fancy-url.com firefox.desktop
+braus --set http://other.fancy chromium_chromium.desktop
+braus --set http://my-videos.org google-chrome.desktop
+````
+
+If you made a mistake, clear the auto mapping list by
+```
+braus --clear
+```
+
 ---------------
 
 © 2020 Kavya Gokul

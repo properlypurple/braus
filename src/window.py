@@ -15,8 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Gio, GLib, Pango, Gdk
 import sys
+
+from gi.repository import Gdk, Gio, GLib, Gtk, Pango
+
 
 class BrausWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'BrausWindow'
@@ -201,6 +203,16 @@ class BrausWindow(Gtk.ApplicationWindow):
 
         # Get all apps which are registered as browsers
         browsers = Gio.AppInfo.get_all_for_type(app.content_types[1])
+
+        # The Gio.AppInfo.launch_uris method takes a list object, so let's make a list and put our url in there
+        uris = []
+        uris.append(self.entry.get_text())
+
+        #create an empty dict to use later
+        appslist = {}
+
+        self.do_checkUrlMappings(app, self.entry.get_text(), browsers)
+
         # Remove Braus from the list of browsers
         self.browsers = list(filter(lambda b: Gio.Application.get_application_id(app) not in b.get_id(), browsers))
         
@@ -248,10 +260,26 @@ class BrausWindow(Gtk.ApplicationWindow):
             # Add our button to the horizontal box we made earlier
             hbox.pack_start(browserEntryBox, True, True, 0)
 
+    def do_checkUrlMappings(self, app, url, browsers):
+        browser = app.browser_mappings.do_determinebrowser(app, url, browsers)
+        if(browser):
+            uris = []
+            uris.append(url)
+            browser.launch_uris(uris)
+            self.quitApp(self,app)
+                        
     def keyboard_handle(self, widget, event, app):
         index = int(Gdk.keyval_name(event.keyval)) - 1
         self.launch_browser(index, app)
 
+    def do_checkUrlMappings(self, app, url, browsers):
+        browser = app.browser_mappings.do_determinebrowser(app, url, browsers)
+        if(browser):
+            uris = []
+            uris.append(url)
+            browser.launch_uris(uris)
+            self.quitApp(self,app)
+                        
     # Function to actually launch the browser
     def browser_click_handle(self, target, index, app):
         self.launch_browser(index, app)
