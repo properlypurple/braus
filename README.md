@@ -1,6 +1,14 @@
 ## Braus
 A small application to select a browser every time you click a link anywhere. This is especially useful if you have multiple browsers or profiles, and you want to be able to open certain links in certain browsers. Very useful for web developers, but also for a lot of other people.
 
+````
+## This is unmaintained for now, since I don't have time from other life stuff. 
+## Please feel free to fork and publish under a different name.
+````
+
+
+
+
 GNU/Linux alternative to apps such as Choosy/Browserchooser
 
 A package is available for Archlinux [in the AUR](https://aur.archlinux.org/packages/braus-git/)
