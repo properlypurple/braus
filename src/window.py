@@ -183,7 +183,7 @@ class BrausWindow(Gtk.ApplicationWindow):
         
         
 
-        if app.settings.get_boolean("ask-default") == True or (Gio.AppInfo.get_default_for_type(app.content_types[1], True).get_id() != Gio.Application.get_application_id(app) + '.desktop') :
+        if app.settings.get_boolean("ask-default") == True and Gio.AppInfo.get_default_for_type(app.content_types[1], True).get_id() != Gio.Application.get_application_id(app) + '.desktop' :
             outerbox.add(infobar)
         
 
