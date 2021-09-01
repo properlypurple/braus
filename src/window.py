@@ -33,70 +33,9 @@ class BrausWindow(Gtk.ApplicationWindow):
         settings = Gtk.Settings.get_default()
         settings.set_property('gtk-application-prefer-dark-theme', True)
 
-        # Putting some css in a string
-        css = b"""
-        * {
-        }
-        decoration {
-            border: 1px solid rgba(0,0,0,0.8);
-            box-shadow: none;
-            outline: none;
-        }
-        window.background.csd {
-            background: none;
-            background-color: rgba(20,20,20,0.95);
-            border: none;
-        }
-        #headerbar {
-            background: none;
-            background-color: rgba(20,20,20,0.95);
-            box-shadow: none;
-            border: none;
-            padding: 5px 10px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.5);
-        }
-        #headerbar entry {
-            background: rgba(0,0,0,0.4);
-            color: #ffffff;
-            font-size: 0.6em;
-            border-radius: 10px;
-            border: 1px solid rgba(0,0,0, 0.4);
-            outline: none;
-            margin:10px 0;
-        }
-        #headerbar entry:focus {
-            border: 1px solid rgba(255,255,255, 0.4);
-            outline: none;
-            box-shadow: none;
-        }
-
-        button decoration {
-            border-radius: initial;
-            border: initial;
-        }
-
-        #mainbox {
-            background: none;
-            padding: 10px;
-        }
-
-        #mainbox button {
-            background: none;
-            border: 1px solid rgba(255,255,255, 0.4);
-            padding: 18px 12px;
-            font-size: 0.6rem;
-        }
-        #mainbox button:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
-
-        #browsericon {
-            margin-bottom: 6px;
-        }
-        """
         # Applying the custom css to the app
         style_provider = Gtk.CssProvider()
-        style_provider.load_from_data(css)
+        style_provider.load_from_data(app.resources.lookup_data('/ui/application-window.css', 0).get_data())
 
         Gtk.StyleContext.add_provider_for_screen(
             Gdk.Screen.get_default(),
@@ -233,7 +172,7 @@ class BrausWindow(Gtk.ApplicationWindow):
             vbox.pack_start(icon,True, True, 0)
             vbox.pack_start(label,True, True, 0)
 
-            button = Gtk.Button()
+            button = Gtk.Button(name='browser-btn')
 
             button.add(vbox)
 
