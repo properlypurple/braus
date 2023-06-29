@@ -1,4 +1,7 @@
 build
 builddir
+.idea
 .vscode
 __pycache__
+*.snap
+prime

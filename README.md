@@ -44,6 +44,13 @@ braus --set http://other.fancy chromium_chromium.desktop
 braus --set http://my-videos.org google-chrome.desktop
 ````
 
+Existing URLs will be overwritten with new `--set` calls.
+
+You can see current mappings by
+```
+braus --get-mappings
+```
+
 If you made a mistake, clear the auto mapping list by
 ```
 braus --clear
